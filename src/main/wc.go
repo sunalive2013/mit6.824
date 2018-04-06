@@ -4,6 +4,10 @@ import (
 	"fmt"
 	"mapreduce"
 	"os"
+	"strings"
+	"unicode"
+	"strconv"
+	"log"
 )
 
 //
@@ -15,6 +19,27 @@ import (
 //
 func mapF(filename string, contents string) []mapreduce.KeyValue {
 	// Your code here (Part II).
+	//根据输入的文件名和文件目录，忽略输入文件名，直挂差目录参数，返回一个kv切片
+	//先对于文件内容value进行分割，用strings.FieldsFunc函数来分割成单词。
+	// 然后对于每个单词，将[word,”1”]加入到中间结果中。
+
+	// FieldsFunc 以一个或多个满足 f(rune) 的字符为分隔符，
+	// 将 s 切分成多个子串，结果中不包含分隔符本身。
+	// 如果 s 中没有满足 f(rune) 的字符，则返回一个空列表。
+	//func FieldsFunc(s string, f func(rune) bool) []string
+	var ans []mapreduce.KeyValue
+	wordvalues := strings.FieldsFunc(contents, func(r rune) bool {
+		return !unicode.IsLetter(r)
+	})
+
+	//将wordvalue加入结果集中
+	//切片尾部追加元素append elemnt
+	for _,wordvalue := range wordvalues {
+		ans = append(ans,mapreduce.KeyValue{wordvalue,"1"})
+	}
+
+	return ans
+
 }
 
 //
@@ -24,6 +49,25 @@ func mapF(filename string, contents string) []mapreduce.KeyValue {
 //
 func reduceF(key string, values []string) string {
 	// Your code here (Part II).
+	//进行累加 Itoa()
+	//参数key为word，参数values就是[“1”,”1”, …]形式的字符串切片
+
+	var cnt int
+
+	for _,value := range values{
+		count,err := strconv.Atoi(value)
+		if err != nil {
+			log.Fatal("reduceF: strconv string to int error: ", err)
+		}
+		cnt+=count
+	}
+
+	return strconv.Itoa(cnt)
+
+
+
+
+
 }
 
 // Can be run in 3 ways:
