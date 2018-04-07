@@ -9,3 +9,6 @@ partI：
 partII：
 完成map函数，使用进行wordcount统计，将结果以["word","1"]的格式计入输出结果
 完成reduce函数，对每个["word","1"进行统计累加，计算出每个单词出现的次数，输出这个结果
+
+part3. 
+调用map和reduce有三种种方式，一直是直接Sequential调用，一种Distributed，还有一种RunWorker
